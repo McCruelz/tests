@@ -34,64 +34,50 @@ daftar_brand = load_brands()
 init_session_state(daftar_brand)
 
 st.title("🛍️ Sistem Prediksi Rekomendasi Produk")
-st.write("""
-Aplikasi ini memprediksi apakah sebuah produk layak direkomendasikan kepada pengguna 
-berdasarkan data historis dan fitur produk, menggunakan **Support Vector Machine (SVM)**.
-""")
 
-with st.expander("💡 Tips Akurat Mendapatkan Rekomendasi (Berdasarkan Analisis Model)"):
-    st.write("""
-    Berdasarkan analisis bobot pada model **Machine Learning (SVM)** yang digunakan, berikut adalah faktor penentu utama agar produk direkomendasikan:
-    
-    *   **Skor Sentimen Ulasan (Paling Penting!)**: Sentimen ulasan yang positif (mendekati 1.0) adalah **faktor nomor satu** yang paling meningkatkan peluang produk direkomendasikan.
-    *   **Rating Produk & Histori Pembelian**: Rating produk yang tinggi (mendekati 5.0) dan jumlah produk serupa yang **sudah dibeli** memiliki pengaruh positif yang sangat besar.
-    *   **Pilihan Brand Berpengaruh**: Model memiliki preferensi tinggi terhadap brand tertentu seperti *Dabur Chyawanprash, Head & Shoulders, HRX*, dan *Urban Ladder*.
-    *   **Jumlah Klik vs Pembelian**: Menariknya, sekadar memiliki *jumlah klik* yang tinggi tanpa diiringi pembelian justru memiliki pengaruh *negatif* (menurunkan kecocokan) terhadap rekomendasi sistem.
-    """)
+col_text, col_tips = st.columns([3, 2])
+with col_text:
+    st.write("Aplikasi ini memprediksi apakah sebuah produk layak direkomendasikan kepada pengguna berdasarkan data historis dan fitur produk, menggunakan **Support Vector Machine (SVM)**.")
+with col_tips:
+    with st.expander("💡 Tips Akurat Mendapatkan Rekomendasi"):
+        st.markdown(
+            "1. **Sentimen Positif**: Pengaruh paling besar (dekati 1.0).\n"
+            "2. **Rating & Histori**: Rating tinggi & banyak dibeli sangat membantu.\n"
+            "3. **Brand**: Model punya preferensi ke brand tertentu.\n"
+            "4. **Klik**: Banyak klik tanpa beli berdampak negatif."
+        )
 
-st.markdown("---")
+# --- Kolom Input (4 Kolom untuk Hemat Ruang) ---
+c1, c2, c3, c4 = st.columns(4)
+with c1:
+    gender = st.selectbox("Jenis Kelamin", GENDER_OPTIONS, key='k_gender')
+    clicks = st.number_input("Klik (Produk Serupa)", min_value=0, step=1, key='k_clicks')
+    purchased = st.number_input("Beli (Produk Serupa)", min_value=0, step=1, key='k_purchased')
 
-st.header("📝 Info Data Pengguna dan Spesifikasi Produk")
+with c2:
+    avg_rating = st.slider("Rata2 Rating Serupa", min_value=0.0, max_value=5.0, step=0.1, key='k_avg_rating')
+    median_price = st.number_input("Median Harga Beli", min_value=100, step=100, key='k_median_price')
+    holiday = st.selectbox("Hari Libur?", HOLIDAY_OPTIONS, key='k_holiday')
 
-# --- Tombol Randomize ---
-st.write("Coba skenario pengujian cepat dengan nilai acak:")
-btn_col1, btn_col2, btn_col3 = st.columns(3)
-with btn_col1:
-    st.button("✨ Auto-Isi: Pasti Lolos", on_click=set_random_recommended, args=(daftar_brand,), use_container_width=True, help="Mengisi form dengan kombinasi yang disukai model.")
-with btn_col2:
-    st.button("🚫 Auto-Isi: Pasti Ditolak", on_click=set_random_not_recommended, args=(daftar_brand,), use_container_width=True, help="Mengisi form dengan kombinasi yang tidak disukai model.")
-with btn_col3:
-    st.button("🎲 Auto-Isi: Acak Total", on_click=set_random_all, args=(daftar_brand,), use_container_width=True, help="Mengisi seluruh form dengan nilai acak sepenuhnya.")
-    
-st.markdown("<br>", unsafe_allow_html=True)
-
-# --- Input Forms ---
-col1, col2 = st.columns(2)
-
-with col1:
-    st.subheader("Data Interaksi Pengguna")
-    gender = st.selectbox("Jenis Kelamin (Gender)", GENDER_OPTIONS, key='k_gender')
-    clicks = st.number_input("Jumlah klik pada produk serupa", min_value=0, step=1, key='k_clicks')
-    purchased = st.number_input("Jumlah produk serupa yang sudah dibeli", min_value=0, step=1, key='k_purchased')
-    avg_rating = st.slider("Rata-rata rating produk serupa", min_value=0.0, max_value=5.0, step=0.1, key='k_avg_rating')
-    median_price = st.number_input("Median harga pembelian sebelumnya (dalam Rupee)", min_value=100, step=100, key='k_median_price')
-    
-    st.subheader("Konteks Waktu & Lokasi")
-    holiday = st.selectbox("Apakah sedang hari libur? (Holiday)", HOLIDAY_OPTIONS, key='k_holiday')
-    season = st.selectbox("Musim saat ini (Season)", SEASON_OPTIONS, key='k_season')
+with c3:
+    season = st.selectbox("Musim", SEASON_OPTIONS, key='k_season')
     geo = st.selectbox("Lokasi Geografis", GEO_OPTIONS, key='k_geo')
+    brand = st.selectbox("Brand Produk", daftar_brand, key='k_brand')
 
-with col2:
-    st.subheader("Detail Produk Saat Ini")
-    brand = st.selectbox("Pilih Brand Produk", daftar_brand, key='k_brand')
-    price = st.number_input("Harga Produk (dalam Rupee)", min_value=90, step=50, key='k_price')
+with c4:
+    price = st.number_input("Harga (Rupee)", min_value=90, step=50, key='k_price')
     product_rating = st.slider("Rating Produk Ini", min_value=0.0, max_value=5.0, step=0.1, key='k_product_rating')
-    sentiment = st.slider("Skor Sentimen Ulasan (-1.0 s/d 1.0)", min_value=-1.0, max_value=1.0, step=0.05, key='k_sentiment')
+    sentiment = st.slider("Sentimen Ulasan", min_value=-1.0, max_value=1.0, step=0.05, key='k_sentiment')
 
-st.markdown("---")
+# --- Tombol Aksi ---
+st.write("---")
+b1, b2, b3, b4 = st.columns(4)
+with b1: st.button("✨ Auto-Isi: Pasti Lolos", on_click=set_random_recommended, args=(daftar_brand,), use_container_width=True)
+with b2: st.button("🚫 Auto-Isi: Pasti Ditolak", on_click=set_random_not_recommended, args=(daftar_brand,), use_container_width=True)
+with b3: st.button("🎲 Auto-Isi: Acak Total", on_click=set_random_all, args=(daftar_brand,), use_container_width=True)
+with b4: cek_btn = st.button("🔍 Cek Rekomendasi Sekarang", type="primary", use_container_width=True)
 
-st.write("### 🔍 Hasil Analisis Sistem")
-if st.button("Cek Rekomendasi Sekarang", type="primary"):
+if cek_btn:
     
     input_pengguna = pd.DataFrame({
         'Number of clicks on similar products': [clicks],
