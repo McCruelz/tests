@@ -41,32 +41,47 @@ with col_text:
 with col_tips:
     with st.expander("💡 Tips Akurat Mendapatkan Rekomendasi"):
         st.markdown(
-            "1. **Sentimen Positif**: Pengaruh paling besar (dekati 1.0).\n"
-            "2. **Rating & Histori**: Rating tinggi & banyak dibeli sangat membantu.\n"
-            "3. **Brand**: Model punya preferensi ke brand tertentu.\n"
-            "4. **Klik**: Banyak klik tanpa beli berdampak negatif."
+            "👤 Sentimen pelanggan harus mendekati 1.0 untuk mendapat hasil yang direkomendasikan.\n"
+            "⭐ Rating tinggi & banyak dibeli akan sangat direkomendasikan.\n"
+            "🏷️ Brand yang dipilih sangat berpengaruh.\n"
+            "📲 Jumlah klik yang banyak namun tanpa pembelian akan berdampak negatif terhadap hasil prediksi."
         )
 
-# --- Kolom Input (4 Kolom untuk Hemat Ruang) ---
-c1, c2, c3, c4 = st.columns(4)
-with c1:
+# --- Kelompok Input Data ---
+st.markdown("### 🚹 Informasi Pengguna & Lingkungan")
+st.markdown("Masukkan informasi mengenai target pengguna dan kondisi lingkungan sekitar saat ini.")
+col_usr1, col_usr2, col_usr3, col_usr4 = st.columns(4)
+with col_usr1:
     gender = st.selectbox("Jenis Kelamin", GENDER_OPTIONS, key='k_gender')
-    clicks = st.number_input("Klik (Produk Serupa)", min_value=0, step=1, key='k_clicks')
-    purchased = st.number_input("Beli (Produk Serupa)", min_value=0, step=1, key='k_purchased')
-
-with c2:
-    avg_rating = st.slider("Rata2 Rating Serupa", min_value=0.0, max_value=5.0, step=0.1, key='k_avg_rating')
-    median_price = st.number_input("Median Harga Beli", min_value=100, step=100, key='k_median_price')
+with col_usr2:
+    geo = st.selectbox("Lokasi Geografis", GEO_OPTIONS, key='k_geo')
+with col_usr3:
+    season = st.selectbox("Musim", SEASON_OPTIONS, key='k_season')
+with col_usr4:
     holiday = st.selectbox("Hari Libur?", HOLIDAY_OPTIONS, key='k_holiday')
 
-with c3:
-    season = st.selectbox("Musim", SEASON_OPTIONS, key='k_season')
-    geo = st.selectbox("Lokasi Geografis", GEO_OPTIONS, key='k_geo')
-    brand = st.selectbox("Brand Produk", daftar_brand, key='k_brand')
+st.markdown("### 🛒 Histori Pembelian & Produk Serupa")
+st.markdown("Masukkan informasi mengenai histori pembelian produk serupa oleh user.")
+col_hist1, col_hist2, col_hist3, col_hist4 = st.columns(4)
+with col_hist1:
+    clicks = st.number_input("Klik (Produk Serupa)", min_value=0, step=1, key='k_clicks')
+with col_hist2:
+    purchased = st.number_input("Beli (Produk Serupa)", min_value=0, step=1, key='k_purchased')
+with col_hist3:
+    avg_rating = st.slider("Rata-rata Rating Serupa", min_value=0.0, max_value=5.0, step=0.1, key='k_avg_rating')
+with col_hist4:
+    median_price = st.number_input("Rata-rata Harga Beli oleh user", min_value=100, step=100, key='k_median_price')
 
-with c4:
-    price = st.number_input("Harga (Rupee)", min_value=90, step=50, key='k_price')
-    product_rating = st.slider("Rating Produk Ini", min_value=0.0, max_value=5.0, step=0.1, key='k_product_rating')
+st.markdown("### 📦 Informasi Produk (Target)")
+st.markdown("Masukkan informasi mengenai target produk yang akan direkomendasikan.")
+col_prod1, col_prod2, col_prod3, col_prod4 = st.columns(4)
+with col_prod1:
+    brand = st.selectbox("Brand Produk", daftar_brand, key='k_brand')
+with col_prod2:
+    price = st.number_input("Harga Produk", min_value=90, step=50, key='k_price')
+with col_prod3:
+    product_rating = st.slider("Rating Produk", min_value=0.0, max_value=5.0, step=0.1, key='k_product_rating')
+with col_prod4:
     sentiment = st.slider("Sentimen Ulasan", min_value=-1.0, max_value=1.0, step=0.05, key='k_sentiment')
 
 # --- Tombol Aksi ---
