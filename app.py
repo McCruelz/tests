@@ -18,6 +18,17 @@ st.write("""
 Aplikasi ini memprediksi apakah sebuah produk layak direkomendasikan kepada pengguna 
 berdasarkan data historis dan fitur produk, menggunakan **Support Vector Machine (SVM)**.
 """)
+
+with st.expander("💡 Tips Akurat Mendapatkan Rekomendasi (Berdasarkan Analisis Model)"):
+    st.write("""
+    Berdasarkan analisis bobot pada model **Machine Learning (SVM)** yang digunakan, berikut adalah faktor penentu utama agar produk direkomendasikan:
+    
+    *   **Skor Sentimen Ulasan (Paling Penting!)**: Sentimen ulasan yang positif (mendekati 1.0) adalah **faktor nomor satu** yang paling meningkatkan peluang produk direkomendasikan.
+    *   **Rating Produk & Histori Pembelian**: Rating produk yang tinggi (mendekati 5.0) dan jumlah produk serupa yang **sudah dibeli** memiliki pengaruh positif yang sangat besar.
+    *   **Pilihan Brand Berpengaruh**: Model memiliki preferensi tinggi terhadap brand tertentu seperti *Dabur Chyawanprash, Head & Shoulders, HRX*, dan *Urban Ladder*.
+    *   **Jumlah Klik vs Pembelian**: Menariknya, sekadar memiliki *jumlah klik* yang tinggi tanpa diiringi pembelian justru memiliki pengaruh *negatif* (menurunkan kecocokan) terhadap rekomendasi sistem.
+    """)
+
 st.markdown("---")
 
 st.header("📝 Info Data Pengguna dan Spesifikasi Produk")
