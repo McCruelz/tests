@@ -41,12 +41,12 @@ with col_text:
     st.write("Aplikasi ini memprediksi apakah sebuah produk layak direkomendasikan kepada pengguna berdasarkan data historis dan fitur produk, menggunakan **Support Vector Machine (SVM)**.")
 with col_tips:
     with st.expander("💡 Tips Akurat Mendapatkan Rekomendasi"):
-        st.markdown(
-            "👤 Sentimen pelanggan mendekati 1.0 akan mendapat hasil yang direkomendasikan.\n"
-            "⭐ Rating tinggi & banyak dibeli akan direkomendasikan.\n"
-            "🏷️ Brand yang dipilih sangat berpengaruh.\n"
-            "📲 Jumlah klik banyak tanpa pembelian berdampak negatif terhadap hasil prediksi."
-        )
+        st.markdown("""
+                    👤 Sentimen pelanggan mendekati 1.0 akan mendapat hasil yang direkomendasikan.  
+                    ⭐ Rating tinggi & banyak dibeli akan direkomendasikan.  
+                    🏷️ Brand yang dipilih sangat berpengaruh.  
+                    📲 Jumlah klik banyak tanpa pembelian berdampak negatif terhadap hasil prediksi.
+                    """)
 
 # --- Kelompok Input Data ---
 st.markdown("### 🚹 Informasi Pengguna & Lingkungan")
