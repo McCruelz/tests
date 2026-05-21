@@ -8,6 +8,7 @@ from input_data import (
     GENDER_OPTIONS, HOLIDAY_OPTIONS, SEASON_OPTIONS, GEO_OPTIONS,
     init_session_state, set_random_recommended, set_random_not_recommended, set_random_all
 )
+from recommendation_utils import get_similar_products
 
 st.set_page_config(page_title="Sistem Rekomendasi Produk", page_icon="🛍️", layout="wide")
 
@@ -41,10 +42,10 @@ with col_text:
 with col_tips:
     with st.expander("💡 Tips Akurat Mendapatkan Rekomendasi"):
         st.markdown(
-            "👤 Sentimen pelanggan harus mendekati 1.0 untuk mendapat hasil yang direkomendasikan.\n"
-            "⭐ Rating tinggi & banyak dibeli akan sangat direkomendasikan.\n"
+            "👤 Sentimen pelanggan mendekati 1.0 akan mendapat hasil yang direkomendasikan.\n"
+            "⭐ Rating tinggi & banyak dibeli akan direkomendasikan.\n"
             "🏷️ Brand yang dipilih sangat berpengaruh.\n"
-            "📲 Jumlah klik yang banyak namun tanpa pembelian akan berdampak negatif terhadap hasil prediksi."
+            "📲 Jumlah klik banyak tanpa pembelian berdampak negatif terhadap hasil prediksi."
         )
 
 # --- Kelompok Input Data ---
@@ -125,6 +126,23 @@ if cek_btn:
                 falling_speed=10,
                 animation_length=1,
             )
+            
+        with st.spinner("Mencari produk yang mirip..."):
+            top_similar = get_similar_products(brand, price, product_rating, sentiment, top_n=3)
+            
+            if not top_similar.empty:
+                st.markdown("### 📦 3 Produk Serupa")
+                # st.markdown("")
+                cols = st.columns(len(top_similar))
+                for idx, (_, row) in enumerate(top_similar.iterrows()):
+                    with cols[idx]:
+                        st.info(f"**{row['Brand of the product']}**")
+                        st.write(f"💵 Harga: Rp {row['Price of the product']}")
+                        st.write(f"⭐ Rating: {row['Rating of the product']} / 5.0")
+                        st.write(f"💬 Sentimen: {row['Customer review sentiment score (overall)']}")
+                        st.caption(f"Tingkat Kemiripan: {row['similarity']*100:.1f}%")
+            else:
+                st.write("Tidak ada produk serupa yang ditemukan.")
             
     except Exception as e:
         st.warning("Terjadi kesalahan pada pemrosesan data.")
