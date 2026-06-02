@@ -82,15 +82,10 @@ with col_prod3:
 with col_prod4:
     sentiment = st.slider("Sentimen Ulasan", min_value=-1.0, max_value=1.0, step=0.05, key='k_sentiment')
 
-# st.write("---")
-# b1, b2, b3, b4 = st.columns(4)
-# with b1: st.button("✨ Auto-Isi: Pasti Lolos", on_click=set_random_recommended, args=(daftar_brand,), use_container_width=True)
-# with b2: st.button("🚫 Auto-Isi: Pasti Ditolak", on_click=set_random_not_recommended, args=(daftar_brand,), use_container_width=True)
-# with b3: st.button("🎲 Auto-Isi: Acak Total", on_click=set_random_all, args=(daftar_brand,), use_container_width=True)
-# with b4: cek_btn = st.button("🔍 Cek Rekomendasi Sekarang", type="primary", use_container_width=True)
+st.write("---")
+cek_btn = st.button("🔍 Cek Rekomendasi Sekarang", type="primary", use_container_width=True)
 
 if cek_btn:
-    
     input_pengguna = pd.DataFrame({
         'Number of clicks on similar products': [clicks],
         'Number of similar products purchased so far': [purchased],
