@@ -3,7 +3,6 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Import konfigurasi dan state manager agar app.py bersih
 from input_data import (
     GENDER_OPTIONS, HOLIDAY_OPTIONS, SEASON_OPTIONS, GEO_OPTIONS,
     init_session_state, set_random_recommended, set_random_not_recommended, set_random_all
@@ -31,7 +30,6 @@ def load_brands():
 svm_model, preprocessor = load_models()
 daftar_brand = load_brands()
 
-# --- Menginisialisasi Session State (Dipanggil dari file terpisah) ---
 init_session_state(daftar_brand)
 
 st.title("🛍️ Sistem Prediksi Rekomendasi Produk")
@@ -48,7 +46,6 @@ with col_tips:
                     📲 Jumlah klik banyak tanpa pembelian berdampak negatif terhadap hasil prediksi.
                     """)
 
-# --- Kelompok Input Data ---
 st.markdown("### 🚹 Informasi Pengguna & Lingkungan")
 st.markdown("Masukkan informasi mengenai target pengguna dan kondisi lingkungan sekitar saat ini.")
 col_usr1, col_usr2, col_usr3, col_usr4 = st.columns(4)
@@ -85,13 +82,12 @@ with col_prod3:
 with col_prod4:
     sentiment = st.slider("Sentimen Ulasan", min_value=-1.0, max_value=1.0, step=0.05, key='k_sentiment')
 
-# --- Tombol Aksi ---
-st.write("---")
-b1, b2, b3, b4 = st.columns(4)
-with b1: st.button("✨ Auto-Isi: Pasti Lolos", on_click=set_random_recommended, args=(daftar_brand,), use_container_width=True)
-with b2: st.button("🚫 Auto-Isi: Pasti Ditolak", on_click=set_random_not_recommended, args=(daftar_brand,), use_container_width=True)
-with b3: st.button("🎲 Auto-Isi: Acak Total", on_click=set_random_all, args=(daftar_brand,), use_container_width=True)
-with b4: cek_btn = st.button("🔍 Cek Rekomendasi Sekarang", type="primary", use_container_width=True)
+# st.write("---")
+# b1, b2, b3, b4 = st.columns(4)
+# with b1: st.button("✨ Auto-Isi: Pasti Lolos", on_click=set_random_recommended, args=(daftar_brand,), use_container_width=True)
+# with b2: st.button("🚫 Auto-Isi: Pasti Ditolak", on_click=set_random_not_recommended, args=(daftar_brand,), use_container_width=True)
+# with b3: st.button("🎲 Auto-Isi: Acak Total", on_click=set_random_all, args=(daftar_brand,), use_container_width=True)
+# with b4: cek_btn = st.button("🔍 Cek Rekomendasi Sekarang", type="primary", use_container_width=True)
 
 if cek_btn:
     
